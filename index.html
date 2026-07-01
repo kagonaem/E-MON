@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-MON | Solutions Company </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="galary/1.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap');
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0b0d0e;
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        input,
+        textarea,
+        select {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            outline: none;
+            transition: 0.3s;
+            color: white;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #2563eb;
+            background: rgba(37, 99, 235, 0.05);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+        }
+        
+        select option {
+            background: #0a0a0a;
+            color: white;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2rem;
+        }
+        
+        .app-wrapper {
+            display: flex;
+            gap: 16px;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        /* ========== SIDEBAR ========== */
+        
+        .sidebar {
+            width: 75px;
+            min-height: calc(100vh - 30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 0;
+            z-index: 50;
+            position: sticky;
+            top: 15px;
+            align-self: flex-start;
+            flex-shrink: 0;
+        }
+        
+        .side-link {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: 0.4s;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+        
+        .side-link:hover,
+        .side-link.active {
+            background: #3b82f6;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+        /* ========== BOTTOM NAV ========== */
+        
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(11, 13, 14, 0.97);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            z-index: 9000;
+            padding: 8px 0 16px;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 12px;
+            transition: 0.3s;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .bottom-nav .nav-item i {
+            font-size: 17px;
+        }
+        
+        .bottom-nav .nav-item.active {
+            color: #3b82f6;
+        }
+        
+        .bottom-nav .nav-item.active i {
+            filter: drop-shadow(0 0 8px #3b82f6);
+        }
+        /* ========== MAIN ========== */
+        
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            overflow-x: hidden;
+        }
+        
+        .main-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+        /* ========== PAGE SYSTEM — CSS خالص بدون Tailwind ========== */
+        
+        .page-section {
+            display: none !important;
+            width: 100%;
+        }
+        
+        .page-section.active-page {
+            display: block !important;
+        }
+        
+        #home-page.active-page,
+        #offers-page.active-page {
+            display: flex !important;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        /* ========== SUCCESS MSG ========== */
+        
+        #success-msg {
+            display: none;
+        }
+        
+        #success-msg.show {
+            display: block;
+        }
+        /* ========== PROJECT CARDS ========== */
+        
+        .p-card {
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            height: 240px;
+            transition: 0.5s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .p-card:hover {
+            transform: translateY(-8px);
+            border-color: #3b82f6;
+        }
+        
+        .p-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.8s;
+            opacity: 0.6;
+        }
+        
+        .p-card:hover img {
+            transform: scale(1.1);
+            opacity: 0.3;
+        }
+        
+        .p-info {
+            position: absolute;
+            inset: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(to top, #000 20%, transparent);
+        }
+        /* ========== MODAL ========== */
+        
+        #details-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: 0.5s;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            width: 100%;
+            max-width: 860px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        /* ========== MARQUEE ========== */
+        
+        .marquee-container {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        
+        .marquee-content {
+            animation: scroll-left 30s linear infinite;
+            min-width: fit-content;
+        }
+        
+        .marquee-container:hover .marquee-content {
+            animation-play-state: paused;
+        }
+        
+        .marquee-item {
+            width: 220px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.2rem;
+            padding: 8px;
+            transition: 0.5s;
+            flex-shrink: 0;
+        }
+        
+        .marquee-item img {
+            width: 100%;
+            height: auto;
+            border-radius: .8rem;
+            filter: grayscale(0.5);
+            transition: 0.5s;
+        }
+        
+        .marquee-item:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+        }
+        
+        .marquee-item:hover img {
+            filter: grayscale(0);
+        }
+        
+        @keyframes scroll-left {
+            from {
+                transform: translateX(0)
+            }
+            to {
+                transform: translateX(-50%)
+            }
+        }
+        /* ========== TECH ICONS ========== */
+        
+        .tech-icon {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            cursor: crosshair;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .tech-icon:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-6px) scale(1.05);
+        }
+        
+        .tech-icon i {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        /* ========== AI ASSISTANT ========== */
+        
+        #ai-assistant-container {
+            position: fixed;
+            bottom: 90px;
+            right: 16px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 8999;
+            pointer-events: none;
+        }
+        
+        #ai-character {
+            width: 80px;
+            height: auto;
+            pointer-events: auto;
+            cursor: help;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+        }
+        
+        #ai-character:hover {
+            transform: scale(1.1) translateY(-8px);
+        }
+        
+        #ai-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-bottom-right-radius: 4px;
+            max-width: 200px;
+            font-size: 12px;
+            line-height: 1.6;
+            direction: rtl;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        #ai-bubble.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+        
+        @keyframes success-pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+        
+        .success-animation {
+            animation: success-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glow-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            transform: scale(0);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+        
+        .glow-button:hover::after {
+            transform: scale(1);
+        }
+        /* ========== DESKTOP ========== */
+        
+        @media(min-width:769px) {
+            body {
+                overflow: hidden;
+                height: 100vh;
+            }
+            .bottom-nav {
+                display: none !important;
+            }
+            .main-content {
+                height: calc(100vh - 30px);
+                overflow-y: auto;
+            }
+            #ai-assistant-container {
+                bottom: 30px;
+                right: 30px;
+            }
+            #ai-character {
+                width: 120px;
+            }
+            #ai-bubble {
+                max-width: 260px;
+                font-size: 13px;
+                padding: 16px 22px;
+            }
+        }
+        /* ========== MOBILE ========== */
+        
+        @media(max-width:768px) {
+            .app-wrapper {
+                padding: 12px 12px 0;
+                gap: 0;
+            }
+            .sidebar {
+                display: none !important;
+            }
+            .bottom-nav {
+                display: flex;
+            }
+            body {
+                padding-bottom: 75px;
+            }
+            .modal-content {
+                grid-template-columns: 1fr;
+            }
+            #details-modal {
+                align-items: flex-end;
+                padding: 0;
+            }
+            .modal-content {
+                border-radius: 2rem 2rem 0 0;
+                max-height: 88vh;
+                overflow-y: auto;
+            }
+            .offer-card-pro {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="ai-assistant-container">
+        <div id="ai-bubble">
+            <p id="ai-text">مرحباً! أنا مساعدك الذكي.</p>
+        </div>
+        <img id="ai-character" src="galary/2.png" alt="E-MON AI">
+    </div>
+
+    <div id="details-modal" onclick="closeModal()">
+        <div class="modal-content glass-panel p-7" onclick="event.stopPropagation()">
+            <div class="rounded-3xl overflow-hidden bg-zinc-900 min-h-[180px]">
+                <img id="modal-img" src="" class="w-full h-full object-cover">
+            </div>
+            <div class="flex flex-col justify-center gap-4">
+                <span class="text-blue-500 font-bold uppercase text-[10px] tracking-widest">Project Intelligence</span>
+                <h2 id="modal-title" class="text-3xl font-black italic uppercase">TITLE</h2>
+                <p id="modal-desc" class="text-gray-400 text-sm leading-relaxed font-light">Details loading...</p>
+                <div class="flex gap-3 flex-wrap">
+                    <button class="bg-blue-600 px-5 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest">Launch</button>
+                    <button onclick="closeModal()" class="border border-white/10 px-5 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-wrapper">
+
+        <aside class="sidebar glass-panel">
+            <div class="bg-blue-600 w-10 h-10 rounded-xl flex items-center justify-center mb-10 shadow-lg shadow-blue-600/30 cursor-pointer" onclick="showPage('home')">
+                <i class="fas fa-bolt text-white"></i>
+            </div>
+            <div class="flex flex-col flex-1 items-center gap-2">
+                <div class="side-link active" title="Home" onclick="showPage('home')"><i class="fas fa-home"></i></div>
+                <div class="side-link" title="Work" onclick="showPage('work')"><i class="fas fa-briefcase"></i></div>
+                <div class="side-link" title="Gallery" onclick="showPage('gallery')"><i class="fas fa-play"></i></div>
+                <div class="side-link" title="Contact" onclick="showPage('contact')"><i class="fas fa-paper-plane"></i></div>
+                <div class="side-link" title="Offers" onclick="showPage('offers')"><i class="fas fa-gift"></i></div>
+                <div class="w-8 h-[1px] bg-white/10 my-4"></div>
+                <a href="https://www.facebook.com/emonsolutions?locale=ar_AR" class="text-white/20 hover:text-blue-500 transition mb-4"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/e_mon_company/" class="text-white/20 hover:text-pink-500 transition mb-4"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/201211615744?text=مرحباً" class="text-white/20 hover:text-green-500 transition"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <img src="galary/3.png" class="w-10 h-10 rounded-full border border-white/10 object-cover mt-4">
+        </aside>
+
+        <main class="main-content">
+
+            <!-- ===== HOME ===== -->
+            <div id="home-page" class="page-section active-page pb-6">
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <div class="lg:col-span-9 glass-panel relative overflow-hidden" style="min-height:260px">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070')] bg-cover opacity-20"></div>
+                        <div class="relative p-7 lg:p-12 h-full flex flex-col justify-center">
+                            <span class="text-blue-500 font-black tracking-[.3em] uppercase text-[10px] mb-3">Core Operational Mode</span>
+                            <h1 class="font-black mb-4 italic leading-none" style="font-size:clamp(2.2rem,7vw,5rem)">E-MON<br>DIGITAL GENIUS</h1>
+                            <div class="flex gap-8">
+                                <div>
+                                    <p class="text-xl font-bold">120+</p>
+                                    <p class="text-[10px] text-gray-500 uppercase font-bold">Projects Done</p>
+                                </div>
+                                <div>
+                                    <p class="text-xl font-bold">48</p>
+                                    <p class="text-[10px] text-gray-500 uppercase font-bold">Active Clients</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3 glass-panel p-6 flex flex-col justify-between text-center gap-4">
+                        <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Global Rank</p>
+                        <div class="font-black italic" style="font-size:clamp(2.5rem,8vw,4rem)">TOP<br>#1</div>
+                        <button onclick="showPage('contact')" class="bg-white text-black py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-600 hover:text-white transition">Connect</button>
+                    </div>
+                </div>
+
+                <div class="space-y-4 overflow-hidden">
+                    <div class="flex items-center gap-4 px-1">
+                        <h2 class="font-black italic uppercase tracking-tighter" style="font-size:clamp(1.4rem,4vw,2rem)">Real <span class="text-blue-600">Feedbacks</span></h2>
+                        <div class="h-[1px] flex-1 bg-white/10"></div>
+                    </div>
+                    <div class="marquee-container relative flex">
+                        <div class="marquee-content flex gap-4 py-2">
+                            <div class="marquee-item"><img src="clint/1.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/2.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/3.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/4.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/5.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/6.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/7.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/8.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/9.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/10.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/11.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/12.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/13.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/14.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/15.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/16.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/17.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/18.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/19.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/20.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/1.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/2.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/3.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/4.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/5.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/6.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/7.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/8.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/9.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/10.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/11.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/12.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/13.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/14.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/15.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/16.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/17.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/18.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/19.jpg" alt=""></div>
+                            <div class="marquee-item"><img src="clint/20.jpg" alt=""></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-card" onclick="openModal('Zinex Platform','نظام إدارة برمجية متكامل.','https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070')">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070">
+                        <div class="p-info">
+                            <h3 class="text-xl font-bold italic">E-MON SYSTEMS</h3>
+                            <p class="text-xs text-blue-500 font-bold uppercase">Software</p>
+                        </div>
+                    </div>
+                    <div class="p-card" onclick="openModal('Visual Core','إنتاج بصري سينمائي.','https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2071')">
+                        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2071">
+                        <div class="p-info">
+                            <h3 class="text-xl font-bold italic">VISUAL CORE</h3>
+                            <p class="text-xs text-blue-500 font-bold uppercase">Media</p>
+                        </div>
+                    </div>
+                    <div class="p-card sm:col-span-2 lg:col-span-1" onclick="openModal('Brand DNA','تصميم هويات بصرية.','https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071')">
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071">
+                        <div class="p-info">
+                            <h3 class="text-xl font-bold italic">BRAND DNA</h3>
+                            <p class="text-xs text-blue-500 font-bold uppercase">Design</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 lg:p-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] rounded-full"></div>
+                    <div class="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="text-center space-y-1">
+                            <p class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-500">Status</p>
+                            <div class="flex items-center justify-center gap-2">
+                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <h3 class="text-lg font-black italic">Online</h3>
+                            </div>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <p class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-500">Projects</p>
+                            <h3 class="text-2xl font-black italic counter-value" data-target="142">0</h3>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <p class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-500">Uptime</p>
+                            <h3 class="text-2xl font-black italic">99.9%</h3>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <p class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-500">Coffee ☕</p>
+                            <h3 class="text-2xl font-black italic counter-value" data-target="850">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6 py-4">
+                    <div class="text-center space-y-1">
+                        <h2 class="font-black italic uppercase tracking-tighter" style="font-size:clamp(1.5rem,4vw,2.2rem)">Powered <span class="text-blue-600">By</span></h2>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">Advanced Digital Architecture</p>
+                    </div>
+                    <div class="flex flex-col gap-4 items-center opacity-70 hover:opacity-100 transition-opacity duration-500">
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <div class="tech-icon group" title="CSS"><i class="fab fa-css3-alt text-2xl group-hover:text-[#38bdf8] transition-colors duration-500"></i></div>
+                            <div class="tech-icon group" title="JavaScript"><i class="fab fa-js text-2xl group-hover:text-[#f7df1e] transition-colors duration-500"></i></div>
+                            <div class="tech-icon group" title="Python"><i class="fab fa-python text-2xl group-hover:text-[#3776ab] transition-colors duration-500"></i></div>
+                            <div class="tech-icon group" title="GitHub"><i class="fab fa-github text-2xl group-hover:text-white transition-colors duration-500"></i></div>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <div class="tech-icon group"><img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" class="w-7 h-7 grayscale group-hover:grayscale-0 transition-all duration-500" alt="Ps"></div>
+                            <div class="tech-icon group"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg" class="w-7 h-7 grayscale group-hover:grayscale-0 transition-all duration-500" alt="Ai"></div>
+                            <div class="tech-icon group"><img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Adobe_Premiere_Pro_CC_icon.svg" class="w-7 h-7 grayscale group-hover:grayscale-0 transition-all duration-500" alt="Pr"></div>
+                            <div class="tech-icon group"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" class="w-7 h-7 grayscale group-hover:grayscale-0 transition-all duration-500" alt="Ae"></div>
+                            <div class="tech-icon group"><i class="fab fa-figma text-2xl group-hover:text-[#f24e1e] transition-colors duration-500"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 lg:p-14 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-blue-600/5"></div>
+                    <h2 class="font-black italic mb-4 relative z-10" style="font-size:clamp(1.6rem,5vw,3.2rem)">READY TO <span class="text-blue-600">EVOLVE?</span></h2>
+                    <p class="text-gray-400 max-w-md mx-auto mb-7 relative z-10 font-light text-sm">Join the elite network of brands powered by E-MON's digital intelligence.</p>
+                    <button onclick="showPage('contact')" class="relative z-10 bg-white text-black px-8 py-3 rounded-full font-black uppercase text-xs tracking-widest hover:bg-blue-600 hover:text-white transition-all transform hover:scale-110">Initialize Project</button>
+                </div>
+
+                <div class="py-4 text-center opacity-20 hover:opacity-100 transition-opacity">
+                    <p class="text-[10px] font-bold tracking-[0.4em] uppercase">© 2026 E-MON MEDIA GROUP . ALL RIGHTS RESERVED</p>
+                </div>
+            </div>
+
+            <!-- ===== WORK ===== -->
+            <div id="work-page" class="page-section pb-6">
+                <div class="glass-panel p-6 lg:p-8 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                    <h2 class="text-4xl font-black italic sticky top-0 bg-[#0b0d0e]/90 backdrop-blur-sm z-10 pb-4">OUR WORK</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="gra.html">
+                            <div class="h-28 lg:h-36 bg-white/5 rounded-3xl p-5 flex items-center justify-between border border-white/10 hover:border-blue-600 transition">
+                                <div>
+                                    <h4 class="text-base lg:text-lg font-bold">Graphic Design</h4>
+                                    <p class="text-xs text-gray-500">Brand & Identity</p>
+                                </div><i class="fas fa-arrow-right text-blue-600"></i></div>
+                        </a>
+                        <a href="web.html">
+                            <div class="h-28 lg:h-36 bg-white/5 rounded-3xl p-5 flex items-center justify-between border border-white/10 hover:border-blue-600 transition">
+                                <div>
+                                    <h4 class="text-base lg:text-lg font-bold">Web Development</h4>
+                                    <p class="text-xs text-gray-500">Responsive Platform</p>
+                                </div><i class="fas fa-arrow-right text-blue-600"></i></div>
+                        </a>
+                        <a href="vid.html">
+                            <div class="h-28 lg:h-36 bg-white/5 rounded-3xl p-5 flex items-center justify-between border border-white/10 hover:border-blue-600 transition">
+                                <div>
+                                    <h4 class="text-base lg:text-lg font-bold">Video Editing</h4>
+                                    <p class="text-xs text-gray-500">Cinematic Production</p>
+                                </div><i class="fas fa-arrow-right text-blue-600"></i></div>
+                        </a>
+                        <a href="writ.html">
+                            <div class="h-28 lg:h-36 bg-white/5 rounded-3xl p-5 flex items-center justify-between border border-white/10 hover:border-blue-600 transition">
+                                <div>
+                                    <h4 class="text-base lg:text-lg font-bold">Writing Books</h4>
+                                    <p class="text-xs text-gray-500">Content & Summaries</p>
+                                </div><i class="fas fa-arrow-right text-blue-600"></i></div>
+                        </a>
+                        <a href="app.html" class="sm:col-span-2">
+                            <div class="h-28 lg:h-36 bg-white/5 rounded-3xl p-5 flex items-center justify-between border border-white/10 hover:border-blue-600 transition">
+                                <div>
+                                    <h4 class="text-base lg:text-lg font-bold">App Development</h4>
+                                    <p class="text-xs text-gray-500">Mobile & Web Apps</p>
+                                </div><i class="fas fa-arrow-right text-blue-600"></i></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== GALLERY ===== -->
+            <div id="gallery-page" class="page-section pb-6">
+                <div class="glass-panel p-6 lg:p-8 max-h-[85vh] overflow-y-auto custom-scrollbar">
+                    <h2 class="text-4xl font-black italic sticky top-0 bg-[#0b0d0e]/90 backdrop-blur-sm z-10 pb-4">GALLERY</h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/1.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/7.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/10.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/12.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/6.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/3.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/56.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/58.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/59.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/57.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/43.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                        <div class="aspect-square rounded-xl overflow-hidden"><img src="graphic/41.png" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== CONTACT ===== -->
+            <div id="contact-page" class="page-section pb-6">
+                <div class="glass-panel p-6 lg:p-10">
+                    <div id="form-container">
+                        <h2 class="font-black uppercase tracking-tighter mb-8" style="font-size:clamp(2rem,7vw,4.5rem)">Let's Talk<span class="text-blue-600">.</span></h2>
+                        <form id="contact-form" name="contact" method="POST" data-netlify="true" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="hidden" name="form-name" value="contact">
+                            <input type="text" name="name" placeholder="Name :" class="p-4 rounded-2xl w-full" required>
+                            <input type="email" name="email" placeholder="Email : *****@gmail.com" class="p-4 rounded-2xl w-full" required>
+                            <input type="tel" name="phone" placeholder="Phone : +20 xxxx xxxx" class="p-4 rounded-2xl w-full" required>
+                            <select name="service" class="p-4 rounded-2xl w-full appearance-none cursor-pointer" required>
+                                <option value="" disabled selected>Select Service</option>
+                                <option value="graphic">Graphic Design</option>
+                                <option value="video">Video Editor</option>
+                                <option value="web">Web Develop</option>
+                                <option value="mobile">Mobile App</option>
+                                <option value="writing">Writing & Summaries</option>
+                            </select>
+                            <textarea name="vision" placeholder="Your Vision" rows="4" class="sm:col-span-2 p-4 rounded-2xl w-full" required></textarea>
+                            <button type="submit" class="glow-button sm:col-span-2 bg-blue-600 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-700 transition active:scale-95">Send Inquiry</button>
+                        </form>
+                    </div>
+                    <div id="success-msg" class="success-animation">
+                        <div class="flex flex-col items-center justify-center py-14 space-y-5 text-center">
+                            <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(37,99,235,0.5)]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <h2 class="font-black uppercase" style="font-size:clamp(2rem,6vw,4rem)">Mission Sent<span class="text-blue-600">.</span></h2>
+                            <p class="text-gray-400 tracking-widest uppercase text-xs">We have received your vision. Our team will reach out shortly.</p>
+                            <button onclick="location.reload()" class="mt-4 text-blue-500 hover:text-white transition text-xs font-bold uppercase tracking-[0.3em] border-b border-blue-500 pb-1">Send another</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== OFFERS ===== -->
+            <div id="offers-page" class="page-section pb-6">
+
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <h2 class="font-black italic uppercase" style="font-size:clamp(2rem,6vw,3.5rem)">HOT <span class="text-blue-600">OFFERS</span></h2>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-blue-500 border border-blue-500/30 px-4 py-2 rounded-full animate-pulse">Limited Time</span>
+                </div>
+
+                <div class="glass-panel p-5 lg:p-7">
+                    <div class="text-center space-y-4">
+                        <p class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">⚡ العروض تنتهي خلال</p>
+                        <div class="flex justify-center items-center gap-2 sm:gap-3">
+                            <div class="flex flex-col items-center gap-2">
+                                <div id="timer-days" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:900;font-style:italic;width:clamp(60px,14vw,85px);height:clamp(60px,14vw,85px);display:flex;align-items:center;justify-content:center;border-radius:14px;background:#1e3a8a;border:2px solid #3b82f6;color:#fff;">00</div>
+                                <span style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:2px;">يوم</span>
+                            </div>
+                            <div style="font-size:1.8rem;font-weight:900;color:#3b82f6;padding-bottom:22px;">:</div>
+                            <div class="flex flex-col items-center gap-2">
+                                <div id="timer-hours" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:900;font-style:italic;width:clamp(60px,14vw,85px);height:clamp(60px,14vw,85px);display:flex;align-items:center;justify-content:center;border-radius:14px;background:#1e3a8a;border:2px solid #3b82f6;color:#fff;">00</div>
+                                <span style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:2px;">ساعة</span>
+                            </div>
+                            <div style="font-size:1.8rem;font-weight:900;color:#3b82f6;padding-bottom:22px;">:</div>
+                            <div class="flex flex-col items-center gap-2">
+                                <div id="timer-mins" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:900;font-style:italic;width:clamp(60px,14vw,85px);height:clamp(60px,14vw,85px);display:flex;align-items:center;justify-content:center;border-radius:14px;background:#1e3a8a;border:2px solid #3b82f6;color:#fff;">00</div>
+                                <span style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:2px;">دقيقة</span>
+                            </div>
+                            <div style="font-size:1.8rem;font-weight:900;color:#3b82f6;padding-bottom:22px;">:</div>
+                            <div class="flex flex-col items-center gap-2">
+                                <div id="timer-secs" style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:900;font-style:italic;width:clamp(60px,14vw,85px);height:clamp(60px,14vw,85px);display:flex;align-items:center;justify-content:center;border-radius:14px;background:#1d4ed8;border:2px solid #60a5fa;color:#bfdbfe;box-shadow:0 0 20px rgba(59,130,246,0.4);">00</div>
+                                <span style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:2px;">ثانية</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-5 flex flex-col gap-4 border border-white/5 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden">
+                        <div class="relative z-10"><span class="text-[10px] font-black uppercase tracking-widest text-gray-400">Starter</span>
+                            <h3 class="text-2xl font-black italic mt-1">BASIC</h3>
+                        </div>
+                        <div class="relative z-10">
+                            <span class="text-gray-500 line-through text-sm">3,600 EGP</span>
+                            <div class="flex items-end gap-2 mt-1"><span class="text-4xl font-black italic">2,499</span><span class="text-blue-500 font-bold mb-1">EGP</span></div>
+                            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full font-bold">وفر 33%</span>
+                        </div>
+                        <ul class="relative z-10 space-y-2 flex-1 text-sm">
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> تصميم جرافيك (5 تصاميم)</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> تعديل فيديو واحد</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> دعم فني 7 أيام</li>
+                            <li class="flex items-center gap-2 text-gray-400 opacity-40"><i class="fas fa-times text-xs"></i> تطوير موقع</li>
+                            <li class="flex items-center gap-2 text-gray-400 opacity-40"><i class="fas fa-times text-xs"></i> تطبيق موبايل</li>
+                        </ul>
+                        <button onclick="showPage('contact')" class="w-full py-3 rounded-2xl border border-white/10 font-black uppercase text-[10px] tracking-widest hover:bg-white/5 transition">اطلب الآن</button>
+                    </div>
+
+                    <div class="offer-card-pro glass-panel p-5 flex flex-col gap-4 border border-blue-500/50 hover:border-blue-400 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden lg:scale-105">
+                        <div class="absolute top-3 left-3 bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full">⭐ الأكثر طلباً</div>
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px] rounded-full"></div>
+                        <div class="relative z-10 mt-5"><span class="text-[10px] font-black uppercase tracking-widest text-blue-500">Most Popular</span>
+                            <h3 class="text-2xl font-black italic mt-1">PRO</h3>
+                        </div>
+                        <div class="relative z-10">
+                            <span class="text-gray-500 line-through text-sm">5,000 EGP</span>
+                            <div class="flex items-end gap-2 mt-1"><span class="text-4xl font-black italic text-blue-400">3,299</span><span class="text-blue-500 font-bold mb-1">EGP</span></div>
+                            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full font-bold">وفر 37%</span>
+                        </div>
+                        <ul class="relative z-10 space-y-2 flex-1 text-sm">
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> تصميم جرافيك (15 تصميم)</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> تعديل 3 فيديوهات</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> موقع ويب كامل</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> هوية بصرية</li>
+                            <li class="flex items-center gap-2 text-gray-400 opacity-40"><i class="fas fa-times text-xs"></i> تطبيق موبايل</li>
+                        </ul>
+                        <button onclick="showPage('contact')" class="relative z-10 w-full py-3 rounded-2xl bg-blue-600 font-black uppercase text-[10px] tracking-widest hover:bg-blue-700 transition shadow-[0_0_20px_rgba(37,99,235,0.4)]">اطلب الآن</button>
+                    </div>
+
+                    <div class="glass-panel p-5 flex flex-col gap-4 border border-white/5 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden sm:col-span-2 lg:col-span-1">
+                        <div class="relative z-10"><span class="text-[10px] font-black uppercase tracking-widest text-gray-400">Full Package</span>
+                            <h3 class="text-2xl font-black italic mt-1">ELITE</h3>
+                        </div>
+                        <div class="relative z-10">
+                            <span class="text-gray-500 line-through text-sm">8,000 EGP</span>
+                            <div class="flex items-end gap-2 mt-1"><span class="text-4xl font-black italic">5,499</span><span class="text-blue-500 font-bold mb-1">EGP</span></div>
+                            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full font-bold">وفر 37%</span>
+                        </div>
+                        <ul class="relative z-10 space-y-2 flex-1 text-sm">
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> تصميم جرافيك (غير محدود)</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> تعديل فيديو (غير محدود)</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> موقع ويب + تطبيق</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> هوية بصرية كاملة</li>
+                            <li class="flex items-center gap-2 text-gray-300"><i class="fas fa-check text-blue-500 text-xs"></i> دعم فني مدى الحياة</li>
+                        </ul>
+                        <button onclick="showPage('contact')" class="w-full py-3 rounded-2xl border border-white/10 font-black uppercase text-[10px] tracking-widest hover:bg-white/5 transition">اطلب الآن</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" data-page="home" onclick="showPage('home')"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item" data-page="work" onclick="showPage('work')"><i class="fas fa-briefcase"></i><span>Work</span></div>
+        <div class="nav-item" data-page="gallery" onclick="showPage('gallery')"><i class="fas fa-play"></i><span>Gallery</span></div>
+        <div class="nav-item" data-page="contact" onclick="showPage('contact')"><i class="fas fa-paper-plane"></i><span>Contact</span></div>
+        <div class="nav-item" data-page="offers" onclick="showPage('offers')"><i class="fas fa-gift"></i><span>Offers</span></div>
+        <a href="https://www.facebook.com/emonsolutions?locale=ar_AR" class="text-white/20 hover:text-blue-500 transition mb-4"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/e_mon_company/" class="text-white/20 hover:text-pink-500 transition mb-4"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/201211615744?text=مرحباً" class="text-white/20 hover:text-green-500 transition"><i class="fab fa-whatsapp"></i></a>
+    </nav>
+
+    <script>
+        let aiTimer, countdownInterval;
+
+        function aiSpeak(text) {
+            const bubble = document.getElementById('ai-bubble');
+            const el = document.getElementById('ai-text');
+            if (!bubble || !el) return;
+            bubble.classList.remove('active');
+            setTimeout(() => {
+                el.innerText = text;
+                bubble.classList.add('active');
+            }, 100);
+            clearTimeout(aiTimer);
+            aiTimer = setTimeout(() => bubble.classList.remove('active'), 7000);
+        }
+
+        function showPage(pageId) {
+            // إخفاء كل الصفحات
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-page'));
+
+            // إظهار الصفحة المطلوبة
+            const target = document.getElementById(pageId + '-page');
+            if (target) {
+                target.classList.add('active-page');
+                if (typeof gsap !== 'undefined') {
+                    gsap.from(target, {
+                        opacity: 0,
+                        y: 20,
+                        duration: 0.45,
+                        ease: 'power2.out'
+                    });
+                }
+            }
+
+            // Sidebar active
+            const titles = {
+                home: 'Home',
+                work: 'Work',
+                gallery: 'Gallery',
+                contact: 'Contact',
+                offers: 'Offers'
+            };
+            document.querySelectorAll('.side-link').forEach(l => {
+                l.classList.toggle('active', l.getAttribute('title') === titles[pageId]);
+            });
+
+            // Bottom nav active - ✅ الكود الجديد
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(l => {
+                l.classList.toggle('active', l.getAttribute('data-page') === pageId);
+            });
+
+            // AI messages
+            const msgs = {
+                home: 'تم العودة للرئيسية. نظام E-MON في الخدمة.',
+                work: 'هنا نستعرض الإنجازات والمشاريع البرمجية.',
+                gallery: 'المعرض يضم أحدث التصاميم والنتائج البصرية.',
+                contact: 'بإمكانك إرسال رؤيتك الآن، وسأقوم بتأمين وصولها.',
+                offers: '🎁 عروض حصرية لفترة محدودة! اختر الباكدج المناسب لك.'
+            };
+            aiSpeak(msgs[pageId] || 'تم الانتقال بنجاح.');
+            if (pageId === 'offers') startCountdown();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function openModal(title, desc, img) {
+            const modal = document.getElementById('details-modal');
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-img').src = img;
+            modal.style.display = 'flex';
+            setTimeout(() => modal.style.opacity = '1', 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('details-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => modal.style.display = 'none', 500);
+        }
+
+        function initCounters() {
+            document.querySelectorAll('.counter-value').forEach(el => {
+                const target = parseInt(el.getAttribute('data-target'));
+                let current = 0;
+                const step = Math.ceil(target / 60);
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    el.innerText = current;
+                }, 30);
+            });
+        }
+
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 3);
+            countdownInterval = setInterval(() => {
+                const diff = endDate - new Date();
+                if (diff <= 0) {
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                const pad = n => String(Math.floor(n)).padStart(2, '0');
+                document.getElementById('timer-days').innerText = pad(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('timer-hours').innerText = pad((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('timer-mins').innerText = pad((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('timer-secs').innerText = pad((diff % (1000 * 60)) / 1000);
+            }, 1000);
+        }
+
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', async e => {
+                e.preventDefault();
+                const fc = document.getElementById('form-container');
+                const sm = document.getElementById('success-msg');
+                try {
+                    const response = await fetch('/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams(new FormData(contactForm)).toString()
+                    });
+                    if (response.ok) {
+                        if (typeof gsap !== 'undefined') {
+                            gsap.to(fc, {
+                                opacity: 0,
+                                scale: 0.9,
+                                duration: 0.5,
+                                onComplete: () => {
+                                    fc.style.display = 'none';
+                                    sm.classList.add('show');
+                                    gsap.from(sm, {
+                                        opacity: 0,
+                                        y: 30,
+                                        duration: 0.5
+                                    });
+                                    aiSpeak('تم استقبال إشارتك بنجاح! فريق E-MON سيتواصل معك قريباً.');
+                                }
+                            });
+                        } else {
+                            fc.style.display = 'none';
+                            sm.classList.add('show');
+                        }
+                    } else {
+                        throw new Error();
+                    }
+                } catch {
+                    aiSpeak('عذراً، حدث خلل في الإرسال. يرجى المحاولة لاحقاً.');
+                }
+            });
+        }
+
+        window.addEventListener('load', () => {
+            initCounters();
+            setTimeout(() => aiSpeak('مرحباً! أنا مساعدك الذكي في E-MON. كيف يمكنني مساعدتك؟'), 1500);
+        });
+    </script>
+</body>
+
+</html>
